@@ -10,7 +10,10 @@ import {
   Title,
   Tooltip,
   Legend,
-  Filler
+  Filler,
+  LineController,
+  BarController,
+  DoughnutController
 } from 'chart.js';
 import { Doughnut, Bar, Chart } from 'react-chartjs-2';
 import { SEV, SEVCOL, MON } from '../utils/helpers';
@@ -25,7 +28,10 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  Filler
+  Filler,
+  LineController,
+  BarController,
+  DoughnutController
 );
 
 ChartJS.defaults.font.family = "'Plus Jakarta Sans',sans-serif";
