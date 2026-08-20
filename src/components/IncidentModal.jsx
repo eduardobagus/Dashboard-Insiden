@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Save } from 'lucide-react';
 import { SEV, RCALABEL, RCAKEY, computeDur, fmtDur, parseRec } from '../utils/helpers';
 
-export default function IncidentModal({ isOpen, onClose, onSave, editingData }) {
+export default function IncidentModal({ isOpen, onClose, onSave, editingData, showAlert }) {
   const [formData, setFormData] = useState({});
   
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function IncidentModal({ isOpen, onClose, onSave, editingData }) 
 
   const handleSave = () => {
     if (!formData.iso || !formData.kron || !formData.kat || !formData.mulai || !formData.resolve) {
-      alert('Mohon lengkapi field yang diwajibkan (*)');
+      if (showAlert) showAlert('Mohon lengkapi field yang diwajibkan (*)');
       return;
     }
 

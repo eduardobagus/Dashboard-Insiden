@@ -7,6 +7,7 @@ import Toolbar from './components/Toolbar';
 import Table from './components/Table';
 import IncidentModal from './components/IncidentModal';
 import ConfirmModal from './components/ConfirmModal';
+import AlertModal from './components/AlertModal';
 import { useIncidents } from './hooks/useIncidents';
 
 export default function App() {
@@ -34,7 +35,15 @@ export default function App() {
   const [editingData, setEditingData] = useState(null);
   
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState(null);
+  const [confirmConfig, setConfirmConfig] = useState({ message: '', action: null });
+
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMsg, setAlertMsg] = useState('');
+
+  const showAlert = (msg) => {
+    setAlertMsg(msg);
+    setAlertOpen(true);
+  };
 
   const handleAddClick = () => {
     setEditingData(null);
@@ -46,15 +55,22 @@ export default function App() {
     setModalOpen(true);
   };
 
-  const handleDeleteClick = (id) => {
-    setItemToDelete(id);
+  const showConfirm = (message, action) => {
+    setConfirmConfig({ message, action });
     setConfirmOpen(true);
   };
 
-  const handleConfirmDelete = () => {
-    if (itemToDelete) {
-      deleteIncident(itemToDelete);
-      setItemToDelete(null);
+  const handleDeleteClick = (id) => {
+    showConfirm('Anda yakin ingin menghapus data ini?', () => deleteIncident(id));
+  };
+
+  const handleResetClick = () => {
+    showConfirm('Yakin ingin mereset data ke kondisi awal (semua perubahan akan hilang)?', () => resetData());
+  };
+
+  const handleConfirmAction = () => {
+    if (confirmConfig.action) {
+      confirmConfig.action();
     }
     setConfirmOpen(false);
   };
@@ -141,8 +157,9 @@ export default function App() {
             filteredView={filteredView}
             allData={data}
             onAdd={handleAddClick}
-            onReset={resetData}
+            onReset={handleResetClick}
             onImport={importData}
+            showAlert={showAlert}
           />
           
           <Table 
@@ -163,12 +180,20 @@ export default function App() {
         onClose={() => setModalOpen(false)} 
         onSave={handleSaveModal}
         editingData={editingData}
+        showAlert={showAlert}
       />
 
       <ConfirmModal
         isOpen={confirmOpen}
         onClose={() => setConfirmOpen(false)}
-        onConfirm={handleConfirmDelete}
+        onConfirm={handleConfirmAction}
+        message={confirmConfig.message}
+      />
+
+      <AlertModal
+        isOpen={alertOpen}
+        onClose={() => setAlertOpen(false)}
+        message={alertMsg}
       />
     </>
   );

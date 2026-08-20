@@ -11,12 +11,13 @@ export default function Toolbar({
   allData,
   onAdd,
   onReset,
-  onImport
+  onImport,
+  showAlert
 }) {
   const fileInputRef = useRef(null);
 
   const handleExport = () => {
-    if (!filteredView.length) return alert('Tidak ada data untuk diexport');
+    if (!filteredView.length) return showAlert('Tidak ada data untuk diexport');
     const head = ['No', 'Tanggal', 'Insiden / Kronologi', 'Kategori', 'Severity', 'Waktu Mulai', 'Waktu Resolve', 'Durasi', 'Dampak', 'Action', 'RCA'];
     const rows = filteredView.map((r, i) => [
       i + 1,
@@ -41,7 +42,7 @@ export default function Toolbar({
   };
 
   const handleBackupJson = () => {
-    if (!allData || !allData.length) return alert('Tidak ada data untuk dibackup');
+    if (!allData || !allData.length) return showAlert('Tidak ada data untuk dibackup');
     const jsonStr = JSON.stringify(allData, null, 2);
     download(jsonStr, `Backup_Insiden_${Date.now()}.json`, 'application/json');
   };
@@ -55,23 +56,19 @@ export default function Toolbar({
         const parsed = JSON.parse(ev.target.result);
         if (Array.isArray(parsed)) {
           onImport(parsed);
-          alert('Data berhasil diimpor!');
+          showAlert('Data berhasil diimpor!');
         } else {
-          alert('Format JSON tidak valid (harus array dari insiden)');
+          showAlert('Format JSON tidak valid (harus array dari insiden)');
         }
       } catch (err) {
-        alert('Gagal membaca file JSON');
+        showAlert('Gagal membaca file JSON');
       }
     };
     reader.readAsText(file);
     e.target.value = ''; // Reset input file
   };
 
-  const handleReset = () => {
-    if (window.confirm('Yakin ingin mereset data ke kondisi awal (semua perubahan akan hilang)?')) {
-      onReset();
-    }
-  };
+  // handleReset removed as confirm is now in App.jsx
 
   return (
     <div className="toolbar">
@@ -118,7 +115,7 @@ export default function Toolbar({
         <button className="btn" onClick={handleExport}>
           <Download size={15} /> Export CSV
         </button>
-        <button className="btn danger" onClick={handleReset}>
+        <button className="btn danger" onClick={onReset}>
           <RefreshCw size={15} /> Reset
         </button>
         <input 
