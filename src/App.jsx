@@ -6,6 +6,7 @@ import { SeverityDonut, TrendChart, CategoryBar, DurationBar } from './component
 import Toolbar from './components/Toolbar';
 import Table from './components/Table';
 import IncidentModal from './components/IncidentModal';
+import ConfirmModal from './components/ConfirmModal';
 import { useIncidents } from './hooks/useIncidents';
 
 export default function App() {
@@ -31,6 +32,9 @@ export default function App() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingData, setEditingData] = useState(null);
+  
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
   const handleAddClick = () => {
     setEditingData(null);
@@ -43,9 +47,16 @@ export default function App() {
   };
 
   const handleDeleteClick = (id) => {
-    if (window.confirm('Yakin ingin menghapus insiden ini?')) {
-      deleteIncident(id);
+    setItemToDelete(id);
+    setConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (itemToDelete) {
+      deleteIncident(itemToDelete);
+      setItemToDelete(null);
     }
+    setConfirmOpen(false);
   };
 
   const handleSaveModal = (data) => {
@@ -152,6 +163,12 @@ export default function App() {
         onClose={() => setModalOpen(false)} 
         onSave={handleSaveModal}
         editingData={editingData}
+      />
+
+      <ConfirmModal
+        isOpen={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        onConfirm={handleConfirmDelete}
       />
     </>
   );
