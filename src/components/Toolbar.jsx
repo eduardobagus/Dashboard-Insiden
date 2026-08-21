@@ -107,7 +107,7 @@ export default function Toolbar({
           <PlusCircle size={15} /> Input Insiden Baru
         </button>
         <button className="btn" onClick={() => fileInputRef.current?.click()}>
-          <Upload size={15} /> Impor JSON
+          <Upload size={15} /> Import File
         </button>
         <button className="btn" onClick={handleBackupJson}>
           <Database size={15} /> Backup JSON

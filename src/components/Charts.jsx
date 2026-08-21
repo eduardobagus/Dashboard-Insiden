@@ -15,6 +15,7 @@ import {
   BarController,
   DoughnutController
 } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Doughnut, Bar, Chart } from 'react-chartjs-2';
 import { SEV, SEVCOL, MON } from '../utils/helpers';
 
@@ -31,7 +32,8 @@ ChartJS.register(
   Filler,
   LineController,
   BarController,
-  DoughnutController
+  DoughnutController,
+  ChartDataLabels
 );
 
 ChartJS.defaults.font.family = "'Plus Jakarta Sans',sans-serif";
@@ -56,6 +58,11 @@ export function SeverityDonut({ data }) {
     maintainAspectRatio: false,
     cutout: '58%',
     plugins: {
+      datalabels: {
+        color: '#fff',
+        font: { weight: '600', size: 12 },
+        formatter: (val) => val > 0 ? val : ''
+      },
       legend: {
         position: 'right',
         labels: { boxWidth: 10, boxHeight: 10, padding: 9, font: { size: 11 } }
@@ -105,7 +112,16 @@ export function TrendChart({ data, monthsPresent }) {
   const options = {
     maintainAspectRatio: false,
     interaction: { mode: 'index', intersect: false },
-    plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, boxHeight: 12, padding: 12 } } },
+    plugins: { 
+      datalabels: {
+        color: (ctx) => ctx.dataset.type === 'line' ? '#0B3C5D' : '#fff',
+        align: (ctx) => ctx.dataset.type === 'line' ? 'top' : 'center',
+        anchor: (ctx) => ctx.dataset.type === 'line' ? 'end' : 'center',
+        font: { weight: '600', size: 10 },
+        formatter: (val) => val > 0 ? val : ''
+      },
+      legend: { position: 'bottom', labels: { boxWidth: 12, boxHeight: 12, padding: 12 } } 
+    },
     scales: {
       x: { stacked: true, grid: { display: false } },
       y: { stacked: true, beginAtZero: true, position: 'left', title: { display: true, text: 'insiden' }, grid: { color: '#eef2f6' }, ticks: { precision: 0 } },
@@ -156,6 +172,14 @@ export function CategoryBar({ data }) {
     indexAxis: 'y',
     maintainAspectRatio: false,
     plugins: {
+      datalabels: {
+        color: '#fff',
+        anchor: 'end',
+        align: 'left',
+        padding: { right: 6 },
+        font: { weight: '600', size: 11 },
+        formatter: (val) => val > 0 ? val : ''
+      },
       legend: { display: false },
       tooltip: {
         backgroundColor: 'rgba(0,0,0,0.8)',
@@ -200,6 +224,14 @@ export function DurationBar({ data }) {
   const options = {
     maintainAspectRatio: false,
     plugins: {
+      datalabels: {
+        color: '#fff',
+        anchor: 'end',
+        align: 'bottom',
+        padding: { bottom: 4 },
+        font: { weight: '600', size: 11 },
+        formatter: (val) => val > 0 ? val : ''
+      },
       legend: { display: false },
       tooltip: { callbacks: { label: c => c.raw + ' mnt' } }
     },

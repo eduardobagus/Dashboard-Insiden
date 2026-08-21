@@ -1,33 +1,33 @@
-import { useState, useEffect, useMemo } from 'react';
-import seedData from '../data/seed.json';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { uid } from '../utils/helpers';
-
-const LSKEY = 'tsel_incidents_v1';
+import * as api from '../lib/api';
 
 export function useIncidents() {
-  const [data, setData] = useState(() => {
-    try {
-      const s = localStorage.getItem(LSKEY);
-      if (s) {
-        const a = JSON.parse(s);
-        if (Array.isArray(a) && a.length) return a;
-      }
-    } catch (e) {}
-    return seedData.map(x => ({ ...x, id: x.id || uid() }));
-  });
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const [dateRange, setDateRange] = useState({ from: '', to: '' });
   const [filterSev, setFilterSev] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Save to local storage whenever data changes
-  useEffect(() => {
+  // Fetch from API on mount
+  const fetchData = useCallback(async () => {
     try {
-      localStorage.setItem(LSKEY, JSON.stringify(data));
-    } catch (e) {
-      console.warn('Failed to save to localStorage', e);
+      setLoading(true);
+      setError(null);
+      const incidents = await api.fetchIncidents();
+      setData(incidents || []);
+    } catch (err) {
+      setError(err.message || 'Failed to fetch data');
+    } finally {
+      setLoading(false);
     }
-  }, [data]);
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   // Derived arrays
   const sortedData = useMemo(() => {
@@ -68,24 +68,67 @@ export function useIncidents() {
     });
   }, [view, filterSev, searchQuery]);
 
-  const addIncident = (incident) => {
-    setData(prev => [...prev, { ...incident, id: uid() }]);
+  const addIncident = async (incident) => {
+    try {
+      const created = await api.createIncident(incident);
+      setData(prev => [...prev, created]);
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
   };
 
-  const updateIncident = (id, updated) => {
-    setData(prev => prev.map(item => item.id === id ? { ...item, ...updated } : item));
+  const updateIncident = async (id, updated) => {
+    try {
+      const result = await api.updateIncident(id, updated);
+      setData(prev => prev.map(item => item.id === id ? { ...item, ...result } : item));
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
   };
 
-  const deleteIncident = (id) => {
-    setData(prev => prev.filter(item => item.id !== id));
+  const deleteIncident = async (id) => {
+    try {
+      await api.deleteIncident(id);
+      setData(prev => prev.filter(item => item.id !== id));
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
   };
 
-  const resetData = () => {
-    setData(seedData.map(x => ({ ...x, id: x.id || uid() })));
+  const resetData = async () => {
+    try {
+      setLoading(true);
+      // We need seed.json data for this. Since we removed the import to keep this clean,
+      // we'll fetch it from the API's seed endpoint assuming we pass the seed array.
+      // Wait, the API requires the seed data array. Let's dynamically import it here.
+      const seedData = (await import('../data/seed.json')).default;
+      await api.seedIncidents(seedData);
+      await fetchData();
+      return true;
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
+      return false;
+    }
   };
 
-  const importData = (newData) => {
-    setData(newData);
+  const importData = async (newData) => {
+    try {
+      setLoading(true);
+      await api.seedIncidents(newData);
+      await fetchData();
+      return true;
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
+      return false;
+    }
   };
 
   return {
@@ -105,6 +148,9 @@ export function useIncidents() {
     updateIncident,
     deleteIncident,
     resetData,
-    importData
+    importData,
+    loading,
+    error,
+    fetchData
   };
 }

@@ -28,7 +28,9 @@ export default function App() {
     updateIncident,
     deleteIncident,
     resetData,
-    importData
+    importData,
+    loading,
+    error
   } = useIncidents();
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -65,7 +67,11 @@ export default function App() {
   };
 
   const handleResetClick = () => {
-    showConfirm('Yakin ingin mereset data ke kondisi awal (semua perubahan akan hilang)?', () => resetData());
+    showConfirm('Yakin ingin mereset data ke kondisi awal (semua perubahan di database akan hilang)?', async () => {
+      const success = await resetData();
+      if (success) showAlert('Data berhasil di-reset!');
+      else showAlert('Gagal mereset data.');
+    });
   };
 
   const handleConfirmAction = () => {
@@ -75,13 +81,30 @@ export default function App() {
     setConfirmOpen(false);
   };
 
-  const handleSaveModal = (data) => {
+  const handleSaveModal = async (data) => {
+    let success = false;
     if (editingData) {
-      updateIncident(editingData.id, data);
+      success = await updateIncident(editingData.id, data);
     } else {
-      addIncident(data);
+      success = await addIncident(data);
+    }
+    
+    if (success) {
+      showAlert('Data berhasil disimpan!');
+    } else {
+      showAlert('Terjadi kesalahan saat menyimpan data.');
     }
   };
+
+  if (loading && !data.length) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', flexDirection: 'column' }}>
+        <div className="spinner" style={{ width: '40px', height: '40px', border: '4px solid #f3f3f3', borderTop: '4px solid #0052cc', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+        <p style={{ marginTop: '16px', color: '#555' }}>Memuat data dari server...</p>
+        <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -171,7 +194,8 @@ export default function App() {
 
         <div className="foot">
           <b>Dashboard Monitoring Insiden</b> — TDR10 Division<br/>
-          Internal use only. Data displayed is based on local storage.
+          Internal use only. Data tersimpan secara persisten di database server.
+          {error && <div style={{ color: 'red', marginTop: '10px' }}>Error sinkronisasi: {error}</div>}
         </div>
       </div>
 
