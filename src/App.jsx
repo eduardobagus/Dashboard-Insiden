@@ -183,7 +183,10 @@ export default function App() {
             onAdd={handleAddClick}
             onReset={handleResetClick}
             onImport={importData}
-            onRefresh={fetchData}
+            onRefresh={async () => {
+              await fetchData();
+              showAlert('Data berhasil di-refresh!');
+            }}
             showAlert={showAlert}
           />
           
