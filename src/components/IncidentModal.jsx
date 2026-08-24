@@ -21,7 +21,17 @@ export default function IncidentModal({ isOpen, onClose, onSave, editingData, sh
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    let finalValue = value;
+
+    if (name === 'resolve') {
+      if (/^\d{3,4}/.test(finalValue)) {
+        finalValue = finalValue.slice(0, 2) + ':' + finalValue.slice(2);
+      } else if (/^\d{2}$/.test(finalValue) && (!formData.resolve || formData.resolve.length < 2)) {
+        finalValue = finalValue + ':';
+      }
+    }
+
+    setFormData(prev => ({ ...prev, [name]: finalValue }));
   };
 
   const handleSave = () => {
