@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Download, PlusCircle, Search, Upload, Database, RefreshCw } from 'lucide-react';
+import { Download, PlusCircle, Search, Upload, Database, RefreshCw, RotateCcw } from 'lucide-react';
 import { SEV, download, fmtTgl, fmtDur } from '../utils/helpers';
 
 export default function Toolbar({ 
@@ -12,6 +12,7 @@ export default function Toolbar({
   onAdd,
   onReset,
   onImport,
+  onRefresh,
   showAlert
 }) {
   const fileInputRef = useRef(null);
@@ -115,8 +116,11 @@ export default function Toolbar({
         <button className="btn" onClick={handleExport}>
           <Download size={15} /> Export CSV
         </button>
+        <button className="btn" onClick={onRefresh}>
+          <RefreshCw size={15} /> Refresh
+        </button>
         <button className="btn danger" onClick={onReset}>
-          <RefreshCw size={15} /> Reset
+          <RotateCcw size={15} /> Reset
         </button>
         <input 
           type="file" 

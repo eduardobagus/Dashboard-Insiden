@@ -30,7 +30,8 @@ export default function App() {
     resetData,
     importData,
     loading,
-    error
+    error,
+    fetchData
   } = useIncidents();
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -182,6 +183,7 @@ export default function App() {
             onAdd={handleAddClick}
             onReset={handleResetClick}
             onImport={importData}
+            onRefresh={fetchData}
             showAlert={showAlert}
           />
           
