@@ -41,12 +41,6 @@ export default function Toolbar({
     download(csv, `Export_Insiden_${Date.now()}.csv`, 'text/csv;charset=utf-8;');
   };
 
-  const handleBackupJson = () => {
-    if (!allData || !allData.length) return showAlert('Tidak ada data untuk dibackup');
-    const jsonStr = JSON.stringify(allData, null, 2);
-    download(jsonStr, `Backup_Insiden_${Date.now()}.json`, 'application/json');
-  };
-
   const handleImportFile = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -109,9 +103,7 @@ export default function Toolbar({
         <button className="btn" onClick={() => fileInputRef.current?.click()}>
           <Upload size={15} /> Import File
         </button>
-        <button className="btn" onClick={handleBackupJson}>
-          <Database size={15} /> Backup JSON
-        </button>
+
         <button className="btn" onClick={handleExport}>
           <Download size={15} /> Export CSV
         </button>
