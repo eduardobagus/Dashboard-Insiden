@@ -67,14 +67,6 @@ export default function App() {
     showConfirm('Anda yakin ingin menghapus data ini?', () => deleteIncident(id));
   };
 
-  const handleResetClick = () => {
-    showConfirm('Yakin ingin mereset data ke kondisi awal (semua perubahan di database akan hilang)?', async () => {
-      const success = await resetData();
-      if (success) showAlert('Data berhasil di-reset!');
-      else showAlert('Gagal mereset data.');
-    });
-  };
-
   const handleConfirmAction = () => {
     if (confirmConfig.action) {
       confirmConfig.action();
@@ -120,7 +112,7 @@ export default function App() {
       />
 
       <div className="wrap">
-        <KPICards viewData={view} />
+        <KPICards viewData={filteredView} />
 
         <div className="grid g-trend">
           <div className="panel">
@@ -131,7 +123,7 @@ export default function App() {
               </div>
             </div>
             <div className="chartbox sm">
-              <SeverityDonut data={view} />
+              <SeverityDonut data={filteredView} />
             </div>
           </div>
           
@@ -143,7 +135,7 @@ export default function App() {
               </div>
             </div>
             <div className="chartbox sm">
-              <TrendChart data={view} monthsPresent={monthsPresent} />
+              <TrendChart data={filteredView} monthsPresent={monthsPresent} />
             </div>
           </div>
         </div>
@@ -154,7 +146,7 @@ export default function App() {
               <h2>Top Kategori Layanan</h2>
             </div>
             <div className="chartbox">
-              <CategoryBar data={view} />
+              <CategoryBar data={filteredView} />
             </div>
           </div>
           
@@ -163,7 +155,7 @@ export default function App() {
               <h2>Rata-rata Durasi (menit)</h2>
             </div>
             <div className="chartbox">
-              <DurationBar data={view} />
+              <DurationBar data={filteredView} />
             </div>
           </div>
         </div>
@@ -181,11 +173,10 @@ export default function App() {
             filteredView={filteredView}
             allData={data}
             onAdd={handleAddClick}
-            onReset={handleResetClick}
             onImport={importData}
-            onRefresh={async () => {
-              await fetchData();
-              showAlert('Data berhasil di-refresh!');
+            onRefresh={() => {
+              showAlert('Memperbarui data...');
+              fetchData();
             }}
             showAlert={showAlert}
           />

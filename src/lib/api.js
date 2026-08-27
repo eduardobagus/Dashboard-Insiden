@@ -3,7 +3,7 @@ const getBaseUrl = () => {
 };
 
 export async function fetchIncidents() {
-  const response = await fetch('https://dashboard-backend-db44l8hq3-eduardobagus-projects.vercel.app/api/incidents');
+  const response = await fetch(`${getBaseUrl()}/api/incidents`);
   if (!response.ok) {
     throw new Error('Failed to fetch incidents');
   }

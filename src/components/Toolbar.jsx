@@ -10,7 +10,6 @@ export default function Toolbar({
   filteredView,
   allData,
   onAdd,
-  onReset,
   onImport,
   onRefresh,
   showAlert
@@ -118,9 +117,6 @@ export default function Toolbar({
         </button>
         <button className="btn" onClick={onRefresh}>
           <RefreshCw size={15} /> Refresh
-        </button>
-        <button className="btn danger" onClick={onReset}>
-          <RotateCcw size={15} /> Reset
         </button>
         <input 
           type="file" 

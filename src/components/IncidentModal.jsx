@@ -12,7 +12,7 @@ export default function IncidentModal({ isOpen, onClose, onSave, editingData, sh
       } else {
         const today = new Date();
         const iso = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
-        setFormData({ iso, mulai: '00:00', resolve: '00:00', sev: 'Minor', rca_key: 'none' });
+        setFormData({ iso, mulai: '00:00', resolve: '', sev: 'Minor', rca_key: 'none' });
       }
     }
   }, [isOpen, editingData]);
@@ -35,15 +35,15 @@ export default function IncidentModal({ isOpen, onClose, onSave, editingData, sh
   };
 
   const handleSave = () => {
-    if (!formData.iso || !formData.kron || !formData.kat || !formData.mulai || !formData.resolve) {
+    if (!formData.iso || !formData.kron || !formData.kat || !formData.mulai) {
       if (showAlert) showAlert('Mohon lengkapi field yang diwajibkan (*)');
       return;
     }
 
     let irec = formData.iso;
-    let trec = formData.resolve;
+    let trec = formData.resolve || '';
 
-    if (trec.includes('(')) {
+    if (trec && trec.includes('(')) {
       const p = parseRec(trec, formData.iso);
       trec = p.t;
       irec = p.irec;
@@ -69,16 +69,20 @@ export default function IncidentModal({ isOpen, onClose, onSave, editingData, sh
   };
 
   let previewDur = '?';
-  if (formData.iso && formData.mulai && formData.resolve) {
-    let irec = formData.iso;
-    let trec = formData.resolve;
-    if (trec.includes('(')) {
-      const p = parseRec(trec, formData.iso);
-      trec = p.t;
-      irec = p.irec;
+  if (formData.iso && formData.mulai) {
+    if (formData.resolve) {
+      let irec = formData.iso;
+      let trec = formData.resolve;
+      if (trec.includes('(')) {
+        const p = parseRec(trec, formData.iso);
+        trec = p.t;
+        irec = p.irec;
+      }
+      const d = computeDur(formData.iso, formData.mulai, irec, trec);
+      previewDur = d !== null ? fmtDur(d) + ` (${d} mnt)` : 'Belum resolve';
+    } else {
+      previewDur = 'Belum resolve';
     }
-    const d = computeDur(formData.iso, formData.mulai, irec, trec);
-    previewDur = fmtDur(d) + ` (${d} mnt)`;
   }
 
   return (
@@ -126,8 +130,8 @@ export default function IncidentModal({ isOpen, onClose, onSave, editingData, sh
               <input type="time" name="mulai" value={formData.mulai || ''} onChange={handleChange} required />
             </div>
             <div>
-              <label>Waktu Resolve <span className="req">*</span></label>
-              <input type="text" name="resolve" placeholder="HH:MM atau HH:MM (DD MMM)" value={formData.resolve || ''} onChange={handleChange} required />
+              <label>Waktu Resolve</label>
+              <input type="text" name="resolve" placeholder="HH:MM atau HH:MM (DD MMM)" value={formData.resolve || ''} onChange={handleChange} />
               <div className="hint">Jika beda hari, gunakan format: <b>08:30 (12 Agu)</b></div>
             </div>
           </div>

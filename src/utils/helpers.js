@@ -26,6 +26,7 @@ export function fmtDur(min) {
 }
 
 export function computeDur(isoS, tS, isoR, tR) {
+  if (!tR) return null;
   const s = new Date(isoS + 'T' + tS + ':00');
   let e = new Date((isoR || isoS) + 'T' + tR + ':00');
   if (e < s) e = new Date(e.getTime() + 86400000);
@@ -33,6 +34,7 @@ export function computeDur(isoS, tS, isoR, tR) {
 }
 
 export function recDisplay(isoS, isoR, tR) {
+  if (!tR) return 'Belum resolve';
   if (isoR && isoR !== isoS) {
     const d = new Date(isoR + 'T00:00:00');
     return tR + ' (' + String(d.getDate()).padStart(2, '0') + ' ' + MON[d.getMonth()] + ')';
