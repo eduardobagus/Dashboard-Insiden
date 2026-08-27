@@ -4,6 +4,15 @@ export const SEV = ['Kritis', 'Mayor', 'Minor', 'Rendah'];
 export const SEVCOL = { Kritis: '#C0392B', Mayor: '#E67E22', Minor: '#2E86C1', Rendah: '#6B7A8F' };
 export const RCALABEL = { ada: 'RCA Ada', belum: 'RCA Belum', none: 'Tidak ada', planned: 'Planned', partial: 'Sebagian' };
 export const RCAKEY = { 'Tidak ada': 'none', 'Ada': 'ada', 'Belum': 'belum', 'Planned': 'planned', 'Sebagian': 'partial' };
+export const KATEGORI_LAYANAN = [
+  'Final Status',
+  'Callback Delay',
+  'Final Status Delay & Pending',
+  'Pending/Maintenance',
+  'Planned Maintenance',
+  'Monitoring',
+  'Pending'
+];
 
 export const dshort = (iso) => {
   const d = new Date(iso + 'T00:00:00');

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Save } from 'lucide-react';
-import { SEV, RCALABEL, RCAKEY, computeDur, fmtDur, parseRec } from '../utils/helpers';
+import { SEV, RCALABEL, RCAKEY, KATEGORI_LAYANAN, computeDur, fmtDur, parseRec } from '../utils/helpers';
 
 export default function IncidentModal({ isOpen, onClose, onSave, editingData, showAlert }) {
   const [formData, setFormData] = useState({});
@@ -12,7 +12,7 @@ export default function IncidentModal({ isOpen, onClose, onSave, editingData, sh
       } else {
         const today = new Date();
         const iso = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
-        setFormData({ iso, mulai: '00:00', resolve: '', sev: 'Minor', rca_key: 'none' });
+        setFormData({ iso, mulai: '00:00', resolve: '', sev: 'Minor', rca_key: 'none', kat: '' });
       }
     }
   }, [isOpen, editingData]);
@@ -100,7 +100,13 @@ export default function IncidentModal({ isOpen, onClose, onSave, editingData, sh
             </div>
             <div>
               <label>Kategori Layanan <span className="req">*</span></label>
-              <input type="text" name="kat" placeholder="Misal: Voice / Data / SMS..." value={formData.kat || ''} onChange={handleChange} required />
+              <select name="kat" value={formData.kat || ''} onChange={handleChange} required>
+                <option value="" disabled>Pilih Kategori...</option>
+                {KATEGORI_LAYANAN.map(k => <option key={k} value={k}>{k}</option>)}
+                {formData.kat && !KATEGORI_LAYANAN.includes(formData.kat) && (
+                  <option value={formData.kat}>{formData.kat}</option>
+                )}
+              </select>
             </div>
           </div>
           
