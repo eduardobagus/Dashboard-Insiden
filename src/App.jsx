@@ -175,8 +175,7 @@ export default function App() {
             onAdd={handleAddClick}
             onImport={importData}
             onRefresh={() => {
-              showAlert('Memperbarui data...');
-              fetchData();
+              window.location.reload();
             }}
             showAlert={showAlert}
           />
