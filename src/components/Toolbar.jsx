@@ -12,6 +12,7 @@ export default function Toolbar({
   onAdd,
   onImport,
   onRefresh,
+  onReset,
   showAlert
 }) {
   const fileInputRef = useRef(null);
@@ -109,6 +110,9 @@ export default function Toolbar({
         </button>
         <button className="btn" onClick={onRefresh}>
           <RefreshCw size={15} /> Refresh
+        </button>
+        <button className="btn" onClick={onReset} style={{ color: '#d32f2f', borderColor: '#d32f2f' }}>
+          <RotateCcw size={15} /> Reset All
         </button>
         <input 
           type="file" 

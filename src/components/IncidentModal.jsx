@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Save } from 'lucide-react';
-import { SEV, RCALABEL, RCAKEY, KATEGORI_LAYANAN, computeDur, fmtDur, parseRec } from '../utils/helpers';
+import { SEV, RCALABEL, RCAKEY, computeDur, fmtDur, parseRec } from '../utils/helpers';
 
 export default function IncidentModal({ isOpen, onClose, onSave, editingData, showAlert }) {
   const [formData, setFormData] = useState({});
@@ -100,13 +100,7 @@ export default function IncidentModal({ isOpen, onClose, onSave, editingData, sh
             </div>
             <div>
               <label>Kategori Layanan <span className="req">*</span></label>
-              <select name="kat" value={formData.kat || ''} onChange={handleChange} required>
-                <option value="" disabled>Pilih Kategori...</option>
-                {KATEGORI_LAYANAN.map(k => <option key={k} value={k}>{k}</option>)}
-                {formData.kat && !KATEGORI_LAYANAN.includes(formData.kat) && (
-                  <option value={formData.kat}>{formData.kat}</option>
-                )}
-              </select>
+              <input type="text" name="kat" placeholder="Masukkan Kategori..." value={formData.kat || ''} onChange={handleChange} required />
             </div>
           </div>
           

@@ -177,6 +177,7 @@ export default function App() {
             onRefresh={() => {
               window.location.reload();
             }}
+            onReset={() => showConfirm('Anda yakin ingin mereset/menghapus semua data?', resetData)}
             showAlert={showAlert}
           />
           
