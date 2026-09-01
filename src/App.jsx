@@ -189,7 +189,7 @@ export default function App() {
         </div>
 
         <div className="foot">
-          <b>Dashboard Monitoring Insiden</b> — TDR10 Division<br/>
+          <b>Dashboard Monitoring Insiden</b><br/>
           Internal use only. Data tersimpan secara persisten di database server.
           {error && <div style={{ color: 'red', marginTop: '10px' }}>Error sinkronisasi: {error}</div>}
         </div>
