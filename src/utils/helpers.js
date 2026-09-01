@@ -44,7 +44,7 @@ export function computeDur(isoS, tS, isoR, tR) {
 
 export function recDisplay(isoS, isoR, tR) {
   if (!tR) return 'Belum resolve';
-  if (isoR && isoR !== isoS) {
+  if (isoR && isoR !== isoS && !tR.includes('(')) {
     const d = new Date(isoR + 'T00:00:00');
     return tR + ' (' + String(d.getDate()).padStart(2, '0') + ' ' + MON[d.getMonth()] + ')';
   }

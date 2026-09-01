@@ -104,11 +104,7 @@ export function useIncidents() {
   const resetData = async () => {
     try {
       setLoading(true);
-      // We need seed.json data for this. Since we removed the import to keep this clean,
-      // we'll fetch it from the API's seed endpoint assuming we pass the seed array.
-      // Wait, the API requires the seed data array. Let's dynamically import it here.
-      const seedData = (await import('../data/seed.json')).default;
-      await api.seedIncidents(seedData);
+      await api.seedIncidents([]);
       await fetchData();
       return true;
     } catch (err) {

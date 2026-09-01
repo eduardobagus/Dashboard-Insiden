@@ -177,7 +177,7 @@ export default function App() {
             onRefresh={() => {
               window.location.reload();
             }}
-            onReset={() => showConfirm('Anda yakin ingin mereset/menghapus semua data?', resetData)}
+            onReset={() => showConfirm('Anda yakin ingin mengosongkan semua data? Tindakan ini akan menghapus seluruh log insiden.', resetData)}
             showAlert={showAlert}
           />
           

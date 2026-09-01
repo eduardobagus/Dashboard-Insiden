@@ -7,7 +7,7 @@ export default function Header({ dateRange }) {
       <div className="hd">
         <div>
           <div className="eyebrow">
-            <span className="pulse"></span> MONITORING INSIDEN · LAYANAN TELKOMSEL (TDR10) · RTS × CNET
+            <span className="pulse"></span> MONITORING INSIDEN
           </div>
           <h1>Dashboard Monitoring Insiden <span>— Severity &amp; Log</span></h1>
         </div>
